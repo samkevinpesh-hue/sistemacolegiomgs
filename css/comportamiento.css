@@ -1,0 +1,382 @@
+/* ================================================
+   comportamiento.css — Estilos específicos del módulo Comportamiento
+   ================================================ */
+
+/* Sin comunicados */
+.sin-comunicados {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+}
+
+.sin-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.sin-comunicados p {
+    color: #475569;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sin-comunicados .hint {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 8px;
+    font-style: normal;
+}
+
+/* Mensaje box */
+.mensaje-box {
+    margin: 16px 0;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 14px;
+    border-left: 4px solid var(--secondary);
+}
+
+.mensaje-box p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+/* Badge de profesor */
+.profesor-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Grado badge */
+.grado-badge {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #4e73df;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Acciones */
+.acciones {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.acciones button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-editar {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+}
+
+.btn-editar:hover {
+    background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
+    transform: translateY(-2px);
+}
+
+.btn-guardar {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+}
+
+.btn-guardar:hover {
+    background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
+    transform: translateY(-2px);
+}
+
+.btn-eliminar {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+}
+
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    transform: translateY(-2px);
+}
+
+/* Edit input */
+.edit-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid var(--secondary);
+    font-family: inherit;
+    font-size: 1rem;
+    margin-top: 12px;
+    resize: vertical;
+}
+
+.edit-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.15);
+}
+.card-msg {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left: 6px solid var(--accent);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-msg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at top right, rgba(28, 200, 138, 0.1), transparent);
+    transition: all 0.4s ease;
+}
+
+.card-msg:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(28, 200, 138, 0.2);
+}
+
+.card-msg:hover::before {
+    width: 150px;
+    height: 150px;
+}
+
+/* Header del mensaje */
+.header-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.header-msg .nota-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.header-msg .nota-header h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: #1e293b;
+}
+
+/* Mensaje */
+.mensaje {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #475569;
+    margin-top: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    border-left: 3px solid var(--secondary);
+}
+
+/* Separador */
+.separador {
+    margin: 32px 0;
+    border: none;
+    border-top: 2px dashed #cbd5e1;
+    position: relative;
+}
+
+.separador::after {
+    content: "✦";
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 12px;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+/* Header simple */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.header h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    position: relative;
+    padding-left: 16px;
+}
+
+.header h4::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: linear-gradient(180deg, var(--secondary), var(--accent));
+    border-radius: 2px;
+}
+
+/* Detalle */
+.detalle {
+    font-size: 0.875rem;
+    color: #64748b;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Textarea de comportamiento */
+#msgComp.mensaje {
+    width: 100%;
+    height: 140px;
+    padding: 16px;
+    border-radius: 14px;
+    border: 2px solid #e2e8f0;
+    margin: 14px 0;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1rem;
+    background: #fafafa;
+    transition: all 0.3s ease;
+}
+
+#msgComp.mensaje:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background: white;
+    box-shadow: 0 0 0 5px rgba(78, 115, 223, 0.15);
+    transform: scale(1.01);
+}
+/* ================================================
+   Botón Actualizar / Recargar (vista padre - comportamiento)
+   ================================================ */
+.btn-recargar-datos {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #4e73df 100%);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 9px 18px 9px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    box-shadow: 0 3px 12px rgba(78, 115, 223, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-recargar-datos::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.btn-recargar-datos:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, #1e40af 0%, #5b81f0 100%);
+}
+
+.btn-recargar-datos:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(78, 115, 223, 0.4);
+}
+
+.btn-recargar-datos:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Ícono SVG circular con fondo */
+.btn-recargar-datos .icono-recargar {
+    width: 26px;
+    height: 26px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    padding: 5px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.btn-recargar-datos:hover .icono-recargar {
+    background: rgba(255,255,255,0.3);
+}
+
+.btn-recargar-datos .btn-recargar-label {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.6px;
+}
+
+/* Animación giro */
+.btn-recargar-datos.recargando .icono-recargar {
+    animation: girarIcono 0.75s linear infinite;
+}
+
+.btn-recargar-datos.recargando .btn-recargar-label::after {
+    content: "...";
+}
+
+@keyframes girarIcono {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
