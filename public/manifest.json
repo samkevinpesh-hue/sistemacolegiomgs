@@ -1,0 +1,26 @@
+{
+    "name": "SchoolDuty - I.E. 80085 Miguel Grau Seminario",
+    "short_name": "SchoolDuty",
+    "description": "Plataforma de Gestión Educativa - I.E. 80085 Miguel Grau Seminario Macabi Alto",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#1a2340",
+    "theme_color": "#4e73df",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "img/logos.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "img/logos.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["education"],
+    "lang": "es-PE"
+}

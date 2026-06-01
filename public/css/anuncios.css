@@ -1,0 +1,405 @@
+/* ================================================
+   anuncios.css — Estilos específicos del módulo Anuncios
+   ================================================ */
+
+/* Card de anuncio */
+.anuncio-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left: 6px solid #f59e0b;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.anuncio-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.1), transparent);
+    transition: all 0.4s ease;
+}
+
+.anuncio-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(245, 158, 11, 0.2);
+}
+
+.anuncio-card:hover::before {
+    width: 150px;
+    height: 150px;
+}
+
+/* Título del anuncio */
+.anuncio-titulo {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Header del anuncio */
+.anuncio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Badges de destinatarios */
+.badge-padres {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1d4ed8;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid #93c5fd;
+}
+
+.badge-profesores {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid #86efac;
+}
+
+.anuncio-destinatarios {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+
+/* Mensaje del anuncio */
+.anuncio-mensaje {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #475569;
+    margin: 12px 0;
+    padding: 16px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-radius: 12px;
+    border-left: 3px solid #f59e0b;
+}
+
+/* Sin anuncios */
+.sin-anuncios {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+}
+
+.sin-anuncios .sin-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.sin-anuncios p {
+    color: #475569;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sin-anuncios .hint {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* Formulario admin */
+.anuncio-form {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid #f59e0b;
+}
+
+.anuncio-form h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Input y textarea del formulario */
+.anuncio-form input[type="text"],
+.anuncio-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.anuncio-form input[type="text"]:focus,
+.anuncio-form textarea:focus {
+    border-color: #f59e0b;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+}
+
+.anuncio-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Checkboxes destinatarios */
+.anuncio-destinos {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 14px 0;
+}
+
+.anuncio-destinos label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #475569;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.anuncio-destinos label:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.anuncio-destinos input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #f59e0b;
+    cursor: pointer;
+}
+
+/* Input file anuncios */
+input[type="file"]#fileAnuncio {
+    display: none;
+}
+
+/* Botón publicar */
+.btn-publicar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.btn-publicar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.btn-publicar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Sección historial admin */
+.anuncios-historial-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 24px 0 16px;
+    padding-left: 14px;
+    border-left: 4px solid #f59e0b;
+}
+
+/* Galería fotos anuncios */
+.galeria-fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.foto-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.img-pequena {
+    width: 100%;
+    max-width: 220px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s;
+}
+
+.img-pequena:hover {
+    border-color: #f59e0b;
+    transform: scale(1.03);
+}
+
+/* Botón eliminar anuncio */
+.btn-eliminar-anuncio {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+}
+
+.btn-eliminar-anuncio:hover {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    transform: translateY(-2px);
+}
+
+/* Fecha */
+.anuncio-fecha {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Botón descargar */
+.btn-descargar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-descargar:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* File tag */
+.file-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    color: #92400e;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid #fde68a;
+}
+
+.file-tag-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    padding: 10px 14px;
+    border-radius: 28px;
+}
+
+.btn-preview-file {
+    border: none;
+    background: #1d4ed8;
+    color: white;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.82rem;
+    transition: background 0.2s ease;
+}
+
+.btn-preview-file:hover {
+    background: #2563eb;
+}
+
+/* btn-file para anuncios */
+.btn-file {
+    display: inline-block;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    color: #64748b;
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: 2px dashed #cbd5e1;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 14px;
+}
+
+.btn-file:hover {
+    border-color: #f59e0b;
+    color: #92400e;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    transform: translateY(-3px);
+}
