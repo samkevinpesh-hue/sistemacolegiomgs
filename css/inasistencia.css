@@ -1,0 +1,743 @@
+/* ================================================
+   inasistencia.css — Módulo Inasistencia
+   ================================================ */
+
+.inas-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-top: 4px solid #e74c3c;
+}
+
+.inas-box h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ---- Tabs ---- */
+.inas-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 16px;
+}
+
+.inas-tab {
+    flex: 1;
+    padding: 11px 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    color: #64748b;
+    background: transparent;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.inas-tab.active {
+    background: white;
+    color: #e74c3c;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.inas-tab:hover:not(.active) {
+    color: #e74c3c;
+    background: rgba(255,255,255,0.6);
+}
+
+.inas-panel {
+    animation: fadeInPanel 0.3s ease;
+}
+
+@keyframes fadeInPanel {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Formulario ---- */
+.inas-form-group {
+    margin-bottom: 16px;
+}
+
+.inas-form-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.inas-form-group select,
+.inas-form-group input[type="text"],
+.inas-form-group input[type="date"],
+.inas-form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    background: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.inas-form-group select:focus,
+.inas-form-group input[type="text"]:focus,
+.inas-form-group input[type="date"]:focus,
+.inas-form-group textarea:focus {
+    border-color: #e74c3c;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(231,76,60,0.12);
+}
+
+.inas-form-group textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* ---- Date picker días ---- */
+.inas-date-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.inas-date-picker-wrap input[type="date"] {
+    width: auto;
+    min-width: 180px;
+}
+
+.inas-date-hint {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.inas-dias-sel-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 32px;
+    margin-top: 6px;
+}
+
+.dia-badge-sel {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    border: 1px solid #fca5a5;
+    transition: all 0.2s;
+}
+
+.dia-badge-sel:hover {
+    background: linear-gradient(135deg, #fecaca, #fca5a5);
+}
+
+/* ---- Botón enviar ---- */
+.btn-inas-enviar {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 14px rgba(231,76,60,0.35);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.btn-inas-enviar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(231,76,60,0.45);
+}
+
+.btn-inas-enviar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ---- Card de justificación ---- */
+.inas-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    border-left: 5px solid #e74c3c;
+    transition: all 0.3s ease;
+}
+
+.inas-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(231,76,60,0.15);
+}
+
+.inas-no-leido {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.inas-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.inas-header-con-foto {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.inas-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.inas-card-header h4 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.inas-profe-badge {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+}
+
+.inas-fecha {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+/* ---- Días lista ---- */
+.inas-dias-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+    color: #475569;
+    font-weight: 600;
+}
+
+.dia-badge {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid #fca5a5;
+}
+
+/* ---- Mensaje ---- */
+.inas-mensaje {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #475569;
+    margin: 10px 0;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #e74c3c;
+}
+
+/* ---- Estado ---- */
+.inas-estado {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.inas-estado.leido {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.inas-estado.pendiente {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.inas-card-acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ---- Botones acción ---- */
+.btn-inas-leido {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.83rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.btn-inas-leido:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(22,163,74,0.2);
+}
+
+.btn-inas-pdf {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1d4ed8;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.83rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.btn-inas-pdf:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29,78,216,0.2);
+}
+
+/* ---- Cuadro asistencia ---- */
+.inas-cuadro-filtros {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.inas-cuadro-filtros select {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    background: #fafafa;
+    transition: border-color 0.2s;
+}
+
+.inas-cuadro-filtros select:focus {
+    border-color: #e74c3c;
+}
+
+.btn-inas-buscar {
+    background: linear-gradient(135deg, #4e73df, #3b5dd9);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.btn-inas-buscar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(78,115,223,0.35);
+}
+
+/* ---- Navegación semana ---- */
+.inas-semana-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+
+.inas-semana-nav button {
+    background: white;
+    border: 2px solid #e2e8f0;
+    padding: 7px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.inas-semana-nav button:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+#semanaLabel {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+/* ---- Tabla ---- */
+.inas-tabla {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.88rem;
+    min-width: 600px;
+}
+
+.inas-tabla thead tr {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.inas-tabla th {
+    padding: 12px 14px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.inas-tabla th:first-child {
+    text-align: left;
+}
+
+.inas-tabla td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.inas-tabla tr:nth-child(even) td {
+    background: #f8fafc;
+}
+
+.inas-tabla tr:hover td {
+    background: #fef2f2;
+}
+
+.inas-alumno-nombre {
+    text-align: left !important;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.inas-cel-presente {
+    color: #16a34a;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.inas-cel-ausente {
+    color: #dc2626;
+    font-size: 1.1rem;
+}
+
+/* ---- Input file oculto ---- */
+input[type="file"]#fileInasistencia,
+input[type="file"]#fileInasistenciaProf {
+    display: none;
+}
+
+/* ---- Sin inasistencias ---- */
+.sin-inas {
+    text-align: center;
+    padding: 40px 24px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: 16px;
+    border: 2px dashed #cbd5e1;
+}
+
+.sin-inas p {
+    color: #475569;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ================================================
+   RESPONSIVE — CELULAR
+   ================================================ */
+@media (max-width: 768px) {
+    .inas-box {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+    }
+
+    .inas-box h3 {
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+
+    .inas-tabs {
+        gap: 4px;
+        padding: 4px;
+        margin-bottom: 16px;
+    }
+
+    .inas-tab {
+        padding: 10px 8px;
+        font-size: 0.75rem;
+        border-radius: 10px;
+    }
+
+    .inas-tab i {
+        display: none;
+    }
+
+    /* ---- Formulario ---- */
+    .inas-form-group {
+        margin-bottom: 12px;
+    }
+
+    .inas-form-group label {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+
+    .inas-form-group select,
+    .inas-form-group input[type="text"],
+    .inas-form-group input[type="date"],
+    .inas-form-group textarea {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .inas-date-picker-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .inas-date-picker-wrap input[type="date"] {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .inas-date-hint {
+        font-size: 0.75rem;
+    }
+
+    .btn-inas-enviar {
+        width: 100%;
+    }
+
+    /* ---- Card de justificación ---- */
+    .inas-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+    }
+
+    .inas-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+
+    .inas-header-con-foto {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .inas-header-info {
+        width: 100%;
+        flex: none;
+    }
+
+    .inas-card-header h4 {
+        font-size: 0.95rem;
+        margin: 0 0 4px 0;
+    }
+
+    .inas-profe-badge {
+        font-size: 0.75rem;
+        margin-top: 2px;
+    }
+
+    .inas-fecha {
+        font-size: 0.75rem;
+        width: 100%;
+        white-space: normal;
+        margin-top: 8px;
+    }
+
+    /* ---- Días lista ---- */
+    .inas-dias-list {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+
+    .dia-badge {
+        padding: 2px 8px;
+        font-size: 0.7rem;
+    }
+
+    /* ---- Mensaje ---- */
+    .inas-mensaje {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+        margin: 8px 0;
+    }
+
+    /* ---- Estado y botones ---- */
+    .inas-estado {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+
+    .btn-eliminar,
+    .btn-descargar,
+    .btn-inas-leido,
+    .btn-inas-pdf {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+
+    .inas-card-acciones {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .inas-card-acciones .btn-eliminar {
+        width: 100%;
+    }
+
+    /* ---- Tabla cuadro ---- */
+    .tabla-inas {
+        font-size: 0.8rem;
+    }
+
+    .tabla-inas thead th {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+
+    .tabla-inas tbody td {
+        padding: 6px;
+        font-size: 0.75rem;
+    }
+
+    .inas-cel-nombre {
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inas-box {
+        padding: 16px 12px;
+    }
+
+    .inas-box h3 {
+        font-size: 0.95rem;
+    }
+
+    .inas-tab {
+        padding: 8px 6px;
+        font-size: 0.7rem;
+    }
+
+    .inas-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    .inas-card-header h4 {
+        font-size: 0.9rem;
+    }
+
+    .inas-profe-badge {
+        font-size: 0.7rem;
+    }
+
+    .inas-fecha {
+        font-size: 0.7rem;
+    }
+
+    .inas-dias-list {
+        font-size: 0.75rem;
+    }
+
+    .dia-badge {
+        padding: 2px 6px;
+        font-size: 0.65rem;
+    }
+
+    .inas-mensaje {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+
+    .btn-inas-enviar {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+    }
+
+    .btn-eliminar {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
