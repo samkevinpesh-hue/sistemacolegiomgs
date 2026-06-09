@@ -727,3 +727,383 @@ input[type="file"]#fileNota {
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
                 transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ================================================
+   BUSCADORES DE NOTAS (Padre y Profesor)
+   ================================================ */
+
+.buscador-historial {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 16px;
+    border: 1.5px solid #e2e8f0;
+}
+
+.buscador-inputs {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.buscador-grupo {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+.buscador-grupo i {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    z-index: 1;
+}
+
+.buscador-grupo input {
+    width: 100%;
+    padding: 11px 14px 11px 42px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #334155;
+    background: white;
+    transition: all 0.25s ease;
+}
+
+.buscador-grupo input:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.12);
+}
+
+.buscador-grupo input[type="date"] {
+    padding-left: 42px;
+    color: #64748b;
+}
+
+.btn-limpiar-busqueda {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-limpiar-busqueda:hover {
+    border-color: #fecaca;
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.resultados-info {
+    margin-top: 10px;
+    min-height: 24px;
+}
+
+.info-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1d4ed8;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.sin-resultados-busqueda {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+    margin-top: 16px;
+}
+
+.sin-resultados-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.sin-resultados-busqueda p {
+    color: #475569;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sin-resultados-busqueda .hint {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .buscador-inputs {
+        flex-direction: column;
+    }
+    .buscador-grupo {
+        min-width: 100%;
+    }
+    .btn-limpiar-busqueda {
+        width: 100%;
+        height: 42px;
+    }
+}
+/* ================================================
+   OVERLAY DE CARGA — ENVÍO DE NOTAS
+   ================================================ */
+
+.overlay-carga {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeInOverlay 0.2s ease;
+}
+
+.overlay-carga.activo {
+    display: flex;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.overlay-carga-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+    animation: zoomInOverlay 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zoomInOverlay {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Spinner circular */
+.spinner-carga {
+    width: 56px;
+    height: 56px;
+    border: 4px solid rgba(255, 255, 255, 0.15);
+    border-top-color: #1cc88a;
+    border-radius: 50%;
+    animation: girarSpinner 0.8s linear infinite;
+}
+
+@keyframes girarSpinner {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Texto del overlay */
+.overlay-carga-texto {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-carga-subtexto {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+/* Barra de progreso opcional */
+.overlay-carga-barra {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.overlay-carga-barra::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, #1cc88a, #17a673);
+    border-radius: 10px;
+    animation: moverBarra 1.2s ease-in-out infinite;
+}
+
+@keyframes moverBarra {
+    0% { left: -40%; }
+    100% { left: 100%; }
+}
+
+/* Responsive overlay */
+@media (max-width: 480px) {
+    .overlay-carga-contenido {
+        padding: 32px 24px;
+    }
+    
+    .spinner-carga {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .overlay-carga-texto {
+        font-size: 1rem;
+    }
+}
+
+/* ================================================
+   BADGES DESTINATARIOS AGRUPADOS
+   ================================================ */
+
+.badge-mas-est {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: linear-gradient(135deg, #4e73df 0%, #3b5dd9 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.badge-total-est {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: #e0e7ff;
+    color: #4338ca;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.aula-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Responsive badges */
+@media (max-width: 640px) {
+    .badge-mas-est,
+    .badge-total-est {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+    }
+    
+    .nota-header-info h4 {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+}
+
+/* ================================================
+   VISTA PREVIA POWERPOINT
+   ================================================ */
+
+.vista-previa-powerpoint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fdf4ff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid #f0abfc;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.vista-previa-powerpoint:hover {
+    border-color: #c026d3;
+    background: #fae8ff;
+}
+
+/* ================================================
+   VISTA PREVIA VIDEO
+   ================================================ */
+
+.vista-previa-video {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fef2f2;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid #fecaca;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.vista-previa-video:hover {
+    border-color: #dc2626;
+    background: #fee2e2;
+}
+
+/* ================================================
+   VIDEO REPRODUCTOR EN MODAL
+   ================================================ */
+
+.vp-video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+}
+
+.vp-video-container video {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* ================================================
+   PDF RENDER CON PDF.js
+   ================================================ */
+
+#pdf-pages canvas {
+    max-width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+}

@@ -7,21 +7,74 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 
 // ================================================
-// SESIÓN: localStorage para mantener sesión tras cerrar
+// SESIÓN: sessionStorage para la sesión activa y localStorage para mantener sesión en el mismo navegador
 // ================================================
-const STORAGE = (typeof window !== "undefined" && window.localStorage) ? window.localStorage : sessionStorage;
+const SESSION_STORAGE = (typeof window !== "undefined" && window.sessionStorage) ? window.sessionStorage : sessionStorage;
+const PERSISTENT_STORAGE = (typeof window !== "undefined" && window.localStorage) ? window.localStorage : sessionStorage;
+const PERSISTED_SESSION_KEY = "__schoolduty_persisted_session__";
 
 const SESION = {
-    set: (key, value) => STORAGE.setItem(key, value),
-    get: (key) => STORAGE.getItem(key),
-    remove: (key) => STORAGE.removeItem(key),
-    clear: () => STORAGE.clear(),
+    set: (key, value) => SESSION_STORAGE.setItem(key, value),
+    get: (key) => SESSION_STORAGE.getItem(key),
+    remove: (key) => SESSION_STORAGE.removeItem(key),
+    clear: () => {
+        SESSION_STORAGE.clear();
+        PERSISTENT_STORAGE.removeItem(PERSISTED_SESSION_KEY);
+    },
+    clearSession: () => SESSION_STORAGE.clear(),
 
-    setJSON: (key, value) => STORAGE.setItem(key, JSON.stringify(value)),
+    setJSON: (key, value) => SESSION_STORAGE.setItem(key, JSON.stringify(value)),
     getJSON: (key) => {
-        const data = STORAGE.getItem(key);
+        const data = SESSION_STORAGE.getItem(key);
         return data ? JSON.parse(data) : null;
-    }
+    },
+
+    persistSession: () => {
+        const current = {
+            usuario: SESION.get("usuario"),
+            rol: SESION.get("rol"),
+            nombre: SESION.get("nombre"),
+            curso: SESION.get("curso"),
+            emoji: SESION.get("emoji"),
+            loginTime: SESION.get("loginTime"),
+            hijos: SESION.getJSON("hijos")
+        };
+        if (current.usuario) {
+            PERSISTENT_STORAGE.setItem(PERSISTED_SESSION_KEY, JSON.stringify(current));
+        }
+    },
+
+    restorePersistedSession: () => {
+        const raw = PERSISTENT_STORAGE.getItem(PERSISTED_SESSION_KEY);
+        if (!raw) return false;
+
+        try {
+            const session = JSON.parse(raw);
+            const loginTime = parseInt(session.loginTime || "0", 10);
+            if (!session.usuario || !session.rol || Date.now() - loginTime > 8 * 60 * 60 * 1000) {
+                PERSISTENT_STORAGE.removeItem(PERSISTED_SESSION_KEY);
+                return false;
+            }
+
+            SESSION_STORAGE.setItem("usuario", session.usuario);
+            SESSION_STORAGE.setItem("rol", session.rol);
+            SESSION_STORAGE.setItem("nombre", session.nombre || session.usuario);
+            SESSION_STORAGE.setItem("curso", session.curso || "");
+            SESSION_STORAGE.setItem("emoji", session.emoji || "");
+            SESSION_STORAGE.setItem("loginTime", session.loginTime);
+
+            if (session.hijos) {
+                SESION.setJSON("hijos", session.hijos);
+            }
+
+            return true;
+        } catch (err) {
+            PERSISTENT_STORAGE.removeItem(PERSISTED_SESSION_KEY);
+            return false;
+        }
+    },
+
+    hasActiveSession: () => !!SESSION_STORAGE.getItem("usuario")
 };
 
 function getSessionData() {
@@ -189,10 +242,31 @@ function leerArchivo(file) {
     });
 }
 
-// Subir archivo a Cloudinary
+// ================================================
+// SUBIR ARCHIVO A CLOUDINARY — CORREGIDO
+// ================================================
+// CAMBIO CLAVE: Todo se sube como 'image' excepto videos.
+// Esto evita que Cloudinary bloquee archivos PDF, Word, Excel, 
+// PowerPoint en cuentas gratuitas (bloqueo de 'raw').
+// ================================================
 async function subirArchivoStorage(file, path) {
     const CLOUD_NAME = 'dlmifj0zp';
     const UPLOAD_PRESET = 'sistemacolegio';
+
+    const tipo = file.type || '';
+    
+    let resourceType = 'auto';
+
+    // Solo videos van como 'video'. Todo lo demás va como 'image':
+    // - Imágenes: funcionan como siempre
+    // - PDFs: Cloudinary los soporta como image, se pueden previsualizar
+    // - Word, Excel, PowerPoint: como image, Cloudinary los entrega sin bloquear
+    // - Genéricos: como image, accesibles públicamente
+    if (tipo.startsWith('video/')) {
+        resourceType = 'video';
+    } else {
+        resourceType = 'image';  // ← CAMBIO CLAVE: todo lo demás como image
+    }
 
     const formData = new FormData();
     formData.append('file', file);
@@ -200,15 +274,71 @@ async function subirArchivoStorage(file, path) {
     formData.append('folder', 'schoolduty');
 
     const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`,
         { method: 'POST', body: formData }
     );
 
-    if (!response.ok) throw new Error('Error al subir archivo');
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error al subir archivo: ${errorData.error?.message || response.statusText}`);
+    }
 
     const data = await response.json();
     return data.secure_url;
 }
+
+// ================================================
+// DESCARGAR ARCHIVO DESDE CLOUDINARY — CORREGIDO
+// ================================================
+// Usa fetch + Blob para descarga forzada con nombre correcto.
+// Añade fl_attachment en URLs de Cloudinary para forzar descarga.
+// ================================================
+async function descargarArchivo(url, nombreArchivo) {
+    try {
+        // Para Cloudinary, insertar fl_attachment para forzar descarga con nombre
+        let downloadUrl = url;
+        if (url.includes('cloudinary.com') && url.includes('/upload/')) {
+            downloadUrl = url.replace('/upload/', '/upload/fl_attachment/');
+        }
+
+        const response = await fetch(downloadUrl, { 
+            mode: 'cors',
+            method: 'GET'
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = nombreArchivo || 'archivo';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+    } catch (e) {
+        console.error('Error descargando archivo:', e);
+        
+        // Fallback: URL con fl_attachment para forzar descarga
+        let fallbackUrl = url;
+        if (url.includes('cloudinary.com') && url.includes('/upload/')) {
+            fallbackUrl = url.replace('/upload/', '/upload/fl_attachment/');
+        }
+        
+        const a = document.createElement('a');
+        a.href = fallbackUrl;
+        a.download = nombreArchivo || 'archivo';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+
 // Modal global (imágenes)
 function abrirModal(src) {
     const modal = document.getElementById("modal-global");
@@ -359,4 +489,4 @@ function quitarBtnRecargar() {
 }
 
 // Exportar funciones necesarias
-export { SESION, getEstudiantes, getUsuarioActual, getHijosPadre, escapeHTML, toast, leerArchivo, subirArchivoStorage, confirmarEliminar, cargarEstudiantes, quitarBtnRecargar, getFotoPerfil, renderFotoPerfilMini };
+export { SESION, getEstudiantes, getUsuarioActual, getHijosPadre, escapeHTML, toast, leerArchivo, subirArchivoStorage, descargarArchivo, confirmarEliminar, cargarEstudiantes, quitarBtnRecargar, getFotoPerfil, renderFotoPerfilMini };

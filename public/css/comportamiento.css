@@ -924,3 +924,142 @@
     flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
+
+/* ================================================
+   BUSCADORES DE COMUNICADOS (Padre y Profesor)
+   ================================================ */
+
+.buscador-historial {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 16px;
+    border: 1.5px solid #e2e8f0;
+}
+
+.buscador-inputs {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.buscador-grupo {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+.buscador-grupo i {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    z-index: 1;
+}
+
+.buscador-grupo input {
+    width: 100%;
+    padding: 11px 14px 11px 42px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #334155;
+    background: white;
+    transition: all 0.25s ease;
+}
+
+.buscador-grupo input:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.12);
+}
+
+.buscador-grupo input[type="date"] {
+    padding-left: 42px;
+    color: #64748b;
+}
+
+.btn-limpiar-busqueda {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-limpiar-busqueda:hover {
+    border-color: #fecaca;
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.resultados-info {
+    margin-top: 10px;
+    min-height: 24px;
+}
+
+.info-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1d4ed8;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.sin-resultados-busqueda {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+    margin-top: 16px;
+}
+
+.sin-resultados-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.sin-resultados-busqueda p {
+    color: #475569;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sin-resultados-busqueda .hint {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .buscador-inputs {
+        flex-direction: column;
+    }
+    .buscador-grupo {
+        min-width: 100%;
+    }
+    .btn-limpiar-busqueda {
+        width: 100%;
+        height: 42px;
+    }
+}

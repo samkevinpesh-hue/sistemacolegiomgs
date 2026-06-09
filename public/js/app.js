@@ -1,18 +1,13 @@
-// ================================================
+
+
 // app.js — Login + Dashboard + Router (Firebase) + Animaciones
 // ================================================
 
-import { getData, setData, pushData, messaging, getToken, onMessage, VAPID_KEY } from './firebase-config.js';
-import { SESION, cargarEstudiantes, getSessionData } from './data.js';
+import { getData } from './firebase-config.js';
+import { SESION, cargarEstudiantes } from './data.js';
 
 /* ==================== ANIMACIONES DE ENTRADA ==================== */
 
-/**
- * Aplica animación fade-in staggered a una lista de elementos.
- * @param {NodeList|Array} elementos - Elementos a animar
- * @param {number} delayInicial - Retraso inicial en ms (default: 0)
- * @param {number} delayEntre - Retraso entre cada elemento en ms (default: 80)
- */
 function animarEntrada(elementos, delayInicial = 0, delayEntre = 80) {
     if (!elementos || elementos.length === 0) return;
     
@@ -29,11 +24,6 @@ function animarEntrada(elementos, delayInicial = 0, delayEntre = 80) {
     });
 }
 
-/**
- * Versión para un solo elemento con animación más lenta.
- * @param {HTMLElement} elemento - Elemento a animar
- * @param {number} delay - Retraso en ms (default: 0)
- */
 function animarEntradaUnica(elemento, delay = 0) {
     if (!elemento) return;
     
@@ -73,14 +63,10 @@ if (document.getElementById("loginForm")) {
             return;
         }
 
-        // Mostrar loading en botón
         const btnLogin = document.querySelector(".btn-login");
         if (btnLogin) { btnLogin.disabled = true; btnLogin.textContent = "Verificando..."; }
 
         try {
-            // ✅ FIX 1: generar key reemplazando TODOS los caracteres especiales del email
-            // 'dianaaguirre@gmail.com'  → 'dianaaguirre_gmail_com'
-            // 'diana.aguirre@gmail.com' → 'diana_aguirre_gmail_com'
             const userKey = usuarioInput.replace(/[.@]/g, '_');
 
             // 1. Buscar en profesores / admin
@@ -106,9 +92,6 @@ if (document.getElementById("loginForm")) {
                         user = padre;
                         rol  = 'padre';
 
-                        // ✅ FIX 2: usar hijos_dni que ya están guardados en Firebase
-                        // ANTES: buscaba por tokens del nombre del padre → nunca encontraba nada
-                        // AHORA: lee directamente el array hijos_dni de cada padre
                         if (padre.hijos_dni && padre.hijos_dni.length > 0) {
                             for (const dni of padre.hijos_dni) {
                                 const estudiante = await getData(`estudiantes/${dni}`);
@@ -129,10 +112,10 @@ if (document.getElementById("loginForm")) {
                 SESION.set("loginTime", Date.now());
 
                 if (rol === "padre") {
-                    SESION.setJSON("hijos", hijos); // [] si aún no tiene hijos asignados
+                    SESION.setJSON("hijos", hijos);
                 }
 
-                await registrarTokenNotificaciones(usuarioInput, rol, user.nombre || usuarioInput);
+                SESION.persistSession();
                 window.location.href = "dashboard.html";
             } else {
                 error.textContent = "❌ Usuario o contraseña incorrectos";
@@ -153,10 +136,13 @@ if (document.getElementById("menu")) {
 }
 
 async function initDashboard() {
+    if (!SESION.hasActiveSession()) {
+        SESION.restorePersistedSession();
+    }
+
     const rol     = SESION.get("rol");
     const usuario = SESION.get("usuario");
 
-    // Verificar sesión (expira en 8 horas)
     const loginTime = parseInt(SESION.get("loginTime") || "0");
     if (!rol || !usuario || (Date.now() - loginTime > 8 * 60 * 60 * 1000)) {
         cerrarSesion();
@@ -164,15 +150,15 @@ async function initDashboard() {
     }
 
     const nombreUsuario = SESION.get("nombre") || usuario;
-    await registrarTokenNotificaciones(usuario, rol, nombreUsuario);
-    configurarMensajesEnLinea();
     document.getElementById("bienvenida").textContent = "Bienvenido " + nombreUsuario;
 
-    // Menús por rol
+    // Menús por rol — ADMIN tiene "Usuarios"
     const menus = {
-        padre:    ["Notas", "Incidencias", "Inasistencia","Anuncios", "Cuenta"],
-        profesor: ["Notas", "Incidencias", "Inasistencia","Anuncios", "Cuenta"],
-        admin:    ["Notas", "Incidencias", "Inasistencia","Anuncios", "Cuenta"]
+        padre:      ["Notas", "Incidencias", "Inasistencia", "Anuncios", "Cuenta"],
+        profesor:   ["Notas", "Incidencias", "Inasistencia", "Anuncios", "Cuenta"],
+        psicologo:  ["Notas", "Incidencias", "Inasistencia", "Anuncios", "Cuenta"],
+        psicólogo:  ["Notas", "Incidencias", "Inasistencia", "Anuncios", "Cuenta"],
+        admin:      ["Notas", "Incidencias", "Inasistencia", "Anuncios", "Usuarios", "Cuenta"]
     };
 
     const menuEl = document.getElementById("menu");
@@ -181,7 +167,8 @@ async function initDashboard() {
         Notas:         'bx-book',
         Incidencias:   'bx-shield-quarter',
         Inasistencia:  'bx-user-x',
-        Cuenta:        'bx-user-circle'
+        Cuenta:        'bx-user-circle',
+        Usuarios:      'bx-group'
     };
 
     (menus[rol] || []).forEach((opcion, idx) => {
@@ -260,9 +247,9 @@ function cargarModulo(opcion) {
     const content = document.getElementById("content-area");
     content.innerHTML = "";
 
-    // Mapeo para archivos CSS (algunos módulos comparten CSS)
     const cssMap = {
-        "Incidencias": "comportamiento"
+        "Incidencias": "comportamiento",
+        "Usuarios": "cuenta"
     };
     const cssName = cssMap[opcion] || opcion.toLowerCase();
     const cssId = "css-" + cssName;
@@ -284,61 +271,9 @@ function cargarModulo(opcion) {
         case "Incidencias":
         case "Comportamiento": initComportamiento(cont);  break;
         case "Inasistencia":   initInasistencia(cont);    break;
+        case "Usuarios":       initUsuariosAdmin(cont);   break;
         case "Cuenta":         initCuenta(cont);          break;
     }
-}
-
-async function registerServiceWorker() {
-    if (!('serviceWorker' in navigator)) return null;
-    try {
-        return await navigator.serviceWorker.register('/service-worker.js');
-    } catch (error) {
-        console.warn('No se pudo registrar el service worker para notificaciones:', error);
-        return null;
-    }
-}
-
-async function registrarTokenNotificaciones(usuario, rol, nombre) {
-    if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-    try {
-        if (!VAPID_KEY || VAPID_KEY === 'TU_VAPID_KEY') {
-            console.warn('Reemplaza VAPID_KEY con tu clave pública VAPID de Firebase Cloud Messaging.');
-            return;
-        }
-
-        let permiso = Notification.permission;
-        if (permiso !== 'granted') {
-            permiso = await Notification.requestPermission();
-        }
-        if (permiso !== 'granted') return;
-
-        const registration = await registerServiceWorker();
-        const token = await getToken(messaging, {
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: registration
-        });
-
-        if (token) {
-            const userKey = usuario.replace(/[.@]/g, '_');
-            await setData(`tokens/${rol}/${userKey}`, {
-                token,
-                usuario,
-                nombre,
-                rol,
-                updatedAt: Date.now()
-            });
-        }
-    } catch (error) {
-        console.error("Error guardando token FCM:", error);
-    }
-}
-
-function configurarMensajesEnLinea() {
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    onMessage(messaging, payload => {
-        const body = payload.notification?.body || payload.data?.body || 'Tienes una nueva notificación';
-        toast(body, 'info');
-    });
 }
 
 function cerrarSesion() {
@@ -349,3 +284,6 @@ function cerrarSesion() {
 window.cerrarSesion = cerrarSesion;
 window.animarEntrada = animarEntrada;
 window.animarEntradaUnica = animarEntradaUnica;
+
+
+

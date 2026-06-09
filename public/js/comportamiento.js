@@ -3,6 +3,7 @@
 // + Un solo mensaje en historial del profesor
 // + Marcar como leído + Respuestas funcionales
 // + Confirmar respuestas de padres por el profesor
+// + Buscador por nombre/fecha para profesores y padres
 // ================================================
 
 import { getData, pushData, updateData, deleteData } from './firebase-config.js';
@@ -11,7 +12,7 @@ import { SESION, getEstudiantes, getHijosPadre, getUsuarioActual, escapeHTML, to
 function initComportamiento(contenedor) {
     const rol = SESION.get("rol");
     _quitarBtnRecargar("btn-recargar");
-    if (rol === "profesor" || rol === "admin") {
+    if (rol === "profesor" || rol === "admin" || rol === "psicologo" || rol === "psicólogo") {
         renderComportProfesor(contenedor);
     } else if (rol === "padre") {
         _inyectarBtnRecargarComp("btn-recargar", () => renderComportPadre(contenedor));
@@ -99,6 +100,25 @@ async function renderComportPadre(cont) {
 
         if (!data.length) { cont.innerHTML = "<p class='vacio'>No hay comunicados aún</p>"; return; }
 
+        // ===== BUSCADOR PADRE =====
+        const buscadorPadreHtml = `
+        <div class="buscador-historial buscador-padre">
+            <div class="buscador-inputs">
+                <div class="buscador-grupo">
+                    <i class="bx bx-search"></i>
+                    <input type="text" id="buscarPadreProfesor" placeholder="Buscar por nombre de profesor..." oninput="filtrarComunicadosPadre()">
+                </div>
+                <div class="buscador-grupo">
+                    <i class="bx bx-calendar"></i>
+                    <input type="date" id="buscarPadreFecha" onchange="filtrarComunicadosPadre()">
+                </div>
+                <button class="btn-limpiar-busqueda" onclick="limpiarBusquedaPadre()" title="Limpiar filtros">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div id="resultados-info-padre" class="resultados-info"></div>
+        </div>`;
+
         const profesores = await getData('profesores');
         const padreUsuario = SESION.get("usuario");
         const padreNombre = SESION.get("nombre");
@@ -110,7 +130,7 @@ async function renderComportPadre(cont) {
             if (foto) fotosPerfil[profUser] = foto;
         }));
 
-        cont.innerHTML = data.map(c => {
+        const cardsHtml = data.map(c => {
             const prof = profesores ? profesores[c.profesor_usuario.replace(/[.@]/g, '_')] : null;
             const fotoProf = fotosPerfil[c.profesor_usuario] || null;
             const padreKey = padreUsuario.replace(/[.@]/g, '_');
@@ -166,6 +186,8 @@ async function renderComportPadre(cont) {
                 </div>
             </div>`;
         }).join("");
+
+        cont.innerHTML = buscadorPadreHtml + `<div id="lista-comunicados-padre">${cardsHtml}</div>`;
 
     } catch (e) {
         cont.innerHTML = "<p class='vacio'>Error al cargar comunicados.</p>";
@@ -441,11 +463,30 @@ async function mostrarHistorialComp() {
             return;
         }
 
+        // ===== BUSCADOR PROFESOR =====
+        const buscadorProfHtml = `
+        <div class="buscador-historial buscador-profesor">
+            <div class="buscador-inputs">
+                <div class="buscador-grupo">
+                    <i class="bx bx-search"></i>
+                    <input type="text" id="buscarProfEstudiante" placeholder="Buscar por nombre de estudiante..." oninput="filtrarComunicadosProfesor()">
+                </div>
+                <div class="buscador-grupo">
+                    <i class="bx bx-calendar"></i>
+                    <input type="date" id="buscarProfFecha" onchange="filtrarComunicadosProfesor()">
+                </div>
+                <button class="btn-limpiar-busqueda" onclick="limpiarBusquedaProfesor()" title="Limpiar filtros">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div id="resultados-info-profesor" class="resultados-info"></div>
+        </div>`;
+
         const profesores = await getData('profesores');
         const prof = profesores ? profesores[usuario.replace(/[.@]/g, '_')] : null;
         const fotoProf = await getFotoPerfil(usuario, 'profesor');
 
-        cont.innerHTML = data.map(c => {
+        const cardsHtml = data.map(c => {
             const vistos = c.vistos || {};
             const cantVistos = Object.keys(vistos).length;
             const respuestas = c.respuestas || {};
@@ -515,6 +556,9 @@ async function mostrarHistorialComp() {
                 </div>
             </div>`;
         }).join("");
+
+        cont.innerHTML = buscadorProfHtml + `<div id="lista-comunicados-profesor">${cardsHtml}</div>`;
+
     } catch (e) {
         cont.innerHTML = "<p class='vacio'>Error al cargar historial.</p>";
         console.error(e);
@@ -654,6 +698,146 @@ function formatFecha(iso) {
     return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
+/* ==================== BUSCADOR PADRE ==================== */
+function filtrarComunicadosPadre() {
+    const texto = document.getElementById('buscarPadreProfesor')?.value.toLowerCase().trim() || '';
+    const fecha = document.getElementById('buscarPadreFecha')?.value || '';
+    const contenedor = document.getElementById('lista-comunicados-padre');
+    const info = document.getElementById('resultados-info-padre');
+    if (!contenedor) return;
+
+    const cards = contenedor.querySelectorAll('.card-msg');
+    let visibles = 0;
+
+    cards.forEach(card => {
+        const nombreProf = card.querySelector('.comport-header-info h4 strong')?.textContent.toLowerCase() || '';
+        const fechaTexto = card.querySelector('.fecha')?.textContent || '';
+        const fechaCard = extraerFechaDeTexto(fechaTexto);
+
+        const coincideTexto = !texto || nombreProf.includes(texto);
+        const coincideFecha = !fecha || fechaCard === fecha;
+
+        if (coincideTexto && coincideFecha) {
+            card.style.display = '';
+            visibles++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (info) {
+        if (texto || fecha) {
+            info.innerHTML = `<span class="info-badge">${visibles} resultado${visibles !== 1 ? 's' : ''}</span>`;
+        } else {
+            info.innerHTML = '';
+        }
+    }
+
+    const sinResultados = contenedor.querySelector('.sin-resultados-busqueda');
+    if (visibles === 0 && (texto || fecha)) {
+        if (!sinResultados) {
+            const div = document.createElement('div');
+            div.className = 'sin-resultados-busqueda';
+            div.innerHTML = `
+                <div class="sin-resultados-icon">🔍</div>
+                <p>No se encontraron comunicados</p>
+                <p class="hint">Intenta con otro nombre o fecha</p>
+            `;
+            contenedor.appendChild(div);
+        }
+    } else if (sinResultados) {
+        sinResultados.remove();
+    }
+}
+
+function limpiarBusquedaPadre() {
+    const inputTexto = document.getElementById('buscarPadreProfesor');
+    const inputFecha = document.getElementById('buscarPadreFecha');
+    if (inputTexto) inputTexto.value = '';
+    if (inputFecha) inputFecha.value = '';
+    filtrarComunicadosPadre();
+}
+
+/* ==================== BUSCADOR PROFESOR ==================== */
+function filtrarComunicadosProfesor() {
+    const texto = document.getElementById('buscarProfEstudiante')?.value.toLowerCase().trim() || '';
+    const fecha = document.getElementById('buscarProfFecha')?.value || '';
+    const contenedor = document.getElementById('lista-comunicados-profesor');
+    const info = document.getElementById('resultados-info-profesor');
+    if (!contenedor) return;
+
+    const cards = contenedor.querySelectorAll('.card-msg');
+    let visibles = 0;
+
+    cards.forEach(card => {
+        const destBadge = card.querySelector('.destinatario-badge')?.textContent.toLowerCase() || '';
+        const fechaTexto = card.querySelector('.fecha')?.textContent || '';
+        const fechaCard = extraerFechaDeTexto(fechaTexto);
+
+        const coincideTexto = !texto || destBadge.includes(texto);
+        const coincideFecha = !fecha || fechaCard === fecha;
+
+        if (coincideTexto && coincideFecha) {
+            card.style.display = '';
+            visibles++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (info) {
+        if (texto || fecha) {
+            info.innerHTML = `<span class="info-badge">${visibles} resultado${visibles !== 1 ? 's' : ''}</span>`;
+        } else {
+            info.innerHTML = '';
+        }
+    }
+
+    const sinResultados = contenedor.querySelector('.sin-resultados-busqueda');
+    if (visibles === 0 && (texto || fecha)) {
+        if (!sinResultados) {
+            const div = document.createElement('div');
+            div.className = 'sin-resultados-busqueda';
+            div.innerHTML = `
+                <div class="sin-resultados-icon">🔍</div>
+                <p>No se encontraron comunicados</p>
+                <p class="hint">Intenta con otro nombre o fecha</p>
+            `;
+            contenedor.appendChild(div);
+        }
+    } else if (sinResultados) {
+        sinResultados.remove();
+    }
+}
+
+function limpiarBusquedaProfesor() {
+    const inputTexto = document.getElementById('buscarProfEstudiante');
+    const inputFecha = document.getElementById('buscarProfFecha');
+    if (inputTexto) inputTexto.value = '';
+    if (inputFecha) inputFecha.value = '';
+    filtrarComunicadosProfesor();
+}
+
+/* ==================== UTILIDAD FECHA ==================== */
+function extraerFechaDeTexto(texto) {
+    if (!texto) return '';
+    const limpio = texto.replace('📅', '').trim();
+    const partes = limpio.split(',');
+    const fechaParte = partes[0].trim();
+    const meses = {
+        'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04', 'may': '05', 'jun': '06',
+        'jul': '07', 'ago': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
+    };
+    const match = fechaParte.match(/(\d{1,2})\s+([a-z]{3})\s+(\d{4})/i);
+    if (match) {
+        const dia = match[1].padStart(2, '0');
+        const mes = meses[match[2].toLowerCase()] || '01';
+        const anio = match[3];
+        return `${anio}-${mes}-${dia}`;
+    }
+    return '';
+}
+
 // Exponer funciones globales
 window.initComportamiento   = initComportamiento;
 window.agregarComp          = agregarComp;
@@ -671,3 +855,7 @@ window.cerrarModalVistos    = cerrarModalVistos;
 window.switchTabVistos      = switchTabVistos;
 window.toggleDestinatarios  = toggleDestinatarios;
 window.confirmarRespuestaProfesor = confirmarRespuestaProfesor;
+window.filtrarComunicadosPadre    = filtrarComunicadosPadre;
+window.limpiarBusquedaPadre       = limpiarBusquedaPadre;
+window.filtrarComunicadosProfesor = filtrarComunicadosProfesor;
+window.limpiarBusquedaProfesor    = limpiarBusquedaProfesor;
